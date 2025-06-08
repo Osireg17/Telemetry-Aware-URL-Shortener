@@ -1,0 +1,5 @@
+com/urlshortener/health/DatabaseHealthCheck.class
+com/urlshortener/health/BasicHealthCheck.class
+com/urlshortener/UrlShortenerApplication.class
+com/urlshortener/UrlShortenerConfiguration.class
+com/urlshortener/UrlShortenerApplication$1.class

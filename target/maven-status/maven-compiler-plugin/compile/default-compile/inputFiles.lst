@@ -1,0 +1,6 @@
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/UrlShortenerApplication.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/UrlShortenerConfiguration.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/core/Link.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/db/LinkDAO.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/health/BasicHealthCheck.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/health/DatabaseHealthCheck.java
