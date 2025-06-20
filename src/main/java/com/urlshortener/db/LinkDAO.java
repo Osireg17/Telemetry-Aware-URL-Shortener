@@ -19,4 +19,7 @@ public interface LinkDAO {
 
     @SqlQuery("SELECT * FROM links WHERE short_code = :shortCode")
     Optional<Link> findByShortCode(@Bind("shortCode") String shortCode);
+
+    @SqlUpdate("UPDATE links SET short_code = :shortCode WHERE id = :id")
+    void updateShortCode(@Bind("id") long id, @Bind("shortCode") String shortCode);
 }

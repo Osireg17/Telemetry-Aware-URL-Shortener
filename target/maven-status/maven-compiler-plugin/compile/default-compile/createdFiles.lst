@@ -1,5 +1,12 @@
 com/urlshortener/health/DatabaseHealthCheck.class
+com/urlshortener/core/Base62Service.class
+com/urlshortener/api/LinksResource$CreateLinkResponse.class
+com/urlshortener/db/LinkDAO.class
+com/urlshortener/api/LinksResource$CreateLinkRequest.class
+com/urlshortener/UrlShortenerApplication$1.class
 com/urlshortener/health/BasicHealthCheck.class
+com/urlshortener/core/Link.class
+com/urlshortener/api/RedirectResource.class
+com/urlshortener/api/LinksResource.class
 com/urlshortener/UrlShortenerApplication.class
 com/urlshortener/UrlShortenerConfiguration.class
-com/urlshortener/UrlShortenerApplication$1.class
