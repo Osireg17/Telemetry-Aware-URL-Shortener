@@ -7,28 +7,30 @@ logging:
 server:
   applicationConnectors:
     - type: http
-      port: 8080
+      port: 0  # Use random available port for tests
   adminConnectors:
     - type: http
-      port: 8081
-
+      port: 0  # Use random available port for tests
+  shutdownGracePeriod: 50ms
+  dumpBeforeStop: false
+  dumpAfterStart: false
 
 database:
   driverClass: org.h2.Driver
-  url: jdbc:h2:mem:urlshortener;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+  url: jdbc:h2:mem:urlshortener_test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
   user: sa
   password:
-  initialSize: 5
-  minSize: 5
-  maxSize: 10
+  initialSize: 1
+  minSize: 1
+  maxSize: 5
   checkConnectionWhileIdle: false
   evictionInterval: 10s
   minIdleTime: 1 minute
 
 health:
   enabled: true
-  delayedShutdownHandlerEnabled: true
-  shutdownWaitPeriod: 5s
+  delayedShutdownHandlerEnabled: false
+  shutdownWaitPeriod: 50ms
   healthCheckUrlPaths:
     - /health
     - /healthcheck

@@ -13,7 +13,7 @@ import java.util.Optional;
 @RegisterBeanMapper(Link.class)
 public interface LinkDAO {
 
-    @SqlUpdate("INSERT INTO links (long_url, short_code, created_at) VALUES (:longUrl, :shortCode, :createdAt)")
+    @SqlUpdate("INSERT INTO links (long_url, short_code) VALUES (:longUrl, :shortCode)")
     @GetGeneratedKeys
     long save(@BindBean Link link);
 

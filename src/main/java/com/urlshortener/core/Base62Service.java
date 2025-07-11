@@ -20,7 +20,7 @@ public final class Base62Service {
      * @return Base62 encoded string
      * @throws IllegalArgumentException if the input number is negative
      */
-    public static String encode(long number) {
+    public String encode(long number) {
         if (number < 0) {
             throw new IllegalArgumentException("Number must be positive");
         }
@@ -46,7 +46,7 @@ public final class Base62Service {
      * @return The decoded number
      * @throws IllegalArgumentException if the input string is null, empty, or contains invalid characters
      */
-    public static long decode(String encoded) {
+    public long decode(String encoded) {
         if (encoded == null || encoded.isEmpty()) {
             throw new IllegalArgumentException("Encoded string cannot be null or empty");
         }

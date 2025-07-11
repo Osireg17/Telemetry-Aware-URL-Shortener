@@ -119,12 +119,3 @@ SQL
     short_code VARCHAR(12) NOT NULL UNIQUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );`
-
-### Why This Structure Works for Phase 1:
-
-- **`id` drives the logic:** The auto-incrementing `id` is the source of truth for uniqueness. You save the link, get this ID back from the database, and then run your Base62 encoding on it to generate the `short_code`.
-- **Efficient Lookups:** When a user hits `GET /{shortCode}`, the `UNIQUE` index on the `short_code` column allows the database to find the corresponding `long_url` extremely quickly.
-- **All Core Tasks Covered:** This simple table has everything you need to complete all the Phase 1 tickets:
-    - It stores the mapping for the `GET` redirect.
-    - It provides the ID needed for short code generation.
-    - It's the foundation for all your DAO and API logic.

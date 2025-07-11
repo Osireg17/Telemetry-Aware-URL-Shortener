@@ -30,12 +30,21 @@ public class LinksResource {
     
     @POST
     public Response createShortLink(@Valid CreateLinkRequest request) {
-        Link link = new Link(request.getLongUrl(), "temp");
-        long generatedId = linkDAO.save(link);
-        
-        String shortCode = base62Service.encode(generatedId);
-        linkDAO.updateShortCode(generatedId, shortCode);
-        
+        String shortCode;
+        if (request.getCustomShortCode() != null && !request.getCustomShortCode().isEmpty()) {
+            shortCode = request.getCustomShortCode();
+            if (linkDAO.findByShortCode(shortCode).isPresent()) {
+                return Response.status(Response.Status.CONFLICT).entity("Custom URL is already taken.").build();
+            }
+            Link link = new Link(request.getLongUrl(), shortCode);
+            linkDAO.save(link);
+        } else {
+            Link link = new Link(request.getLongUrl(), "temp");
+            long generatedId = linkDAO.save(link);
+            shortCode = base62Service.encode(generatedId);
+            linkDAO.updateShortCode(generatedId, shortCode);
+        }
+
         CreateLinkResponse response = new CreateLinkResponse(
             "http://localhost:8080/" + shortCode,
             shortCode
@@ -45,15 +54,20 @@ public class LinksResource {
                 .entity(response)
                 .build();
     }
-    
+
     public static class CreateLinkRequest {
         @NotNull
         @NotBlank
         @URL
         private String longUrl;
+
+        private String customShortCode;
         
         public String getLongUrl() { return longUrl; }
         public void setLongUrl(String longUrl) { this.longUrl = longUrl; }
+
+        public String getCustomShortCode() { return customShortCode; }
+        public void setCustomShortCode(String customShortCode) { this.customShortCode = customShortCode; }
     }
     
     public static class CreateLinkResponse {
@@ -71,6 +85,5 @@ public class LinksResource {
         public String getShortCode() { return shortCode; }
     }
 
-    //TODO: Allow users to create Allow Custom Vanity URLs. Enhance the `POST /api/v1/links` endpoint to allow users to suggest their own custom short code
     // TODO: Add a server-side rate limit to the `POST /api/v1/links` endpoint to prevent abuse from a single client
 }
