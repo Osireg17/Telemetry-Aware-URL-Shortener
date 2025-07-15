@@ -5,6 +5,7 @@ com/urlshortener/db/LinkDAO.class
 com/urlshortener/api/LinksResource$CreateLinkRequest.class
 com/urlshortener/UrlShortenerApplication$1.class
 com/urlshortener/health/BasicHealthCheck.class
+com/urlshortener/UrlShortenerConfiguration$ApplicationConfiguration.class
 com/urlshortener/core/Link.class
 com/urlshortener/api/RedirectResource.class
 com/urlshortener/api/LinksResource.class

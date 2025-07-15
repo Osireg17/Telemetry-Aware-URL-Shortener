@@ -27,6 +27,13 @@ database:
   evictionInterval: 10s
   minIdleTime: 1 minute
 
+application:
+  baseUrl: "http://localhost:8080"  # This will be overridden by test framework
+  version: "1.0.0-TEST"
+  name: "UrlShortener-Test"
+  rateLimitRequestsPerMinute: 100  # Higher limit for tests
+  maxCustomShortCodeLength: 50
+
 health:
   enabled: true
   delayedShutdownHandlerEnabled: false

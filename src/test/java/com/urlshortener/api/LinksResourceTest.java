@@ -1,5 +1,6 @@
 package com.urlshortener.api;
 
+import com.urlshortener.UrlShortenerConfiguration;
 import com.urlshortener.core.Base62Service;
 import com.urlshortener.core.Link;
 import com.urlshortener.db.LinkDAO;
@@ -8,6 +9,7 @@ import io.dropwizard.testing.junit5.ResourceExtension;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -19,15 +21,17 @@ class LinksResourceTest {
 
     private final LinkDAO linkDAO = mock(LinkDAO.class);
     private final Base62Service base62Service = mock(Base62Service.class);
+    private final UrlShortenerConfiguration.ApplicationConfiguration appConfig =
+            mock(UrlShortenerConfiguration.ApplicationConfiguration.class);
+
     private final ResourceExtension resource = ResourceExtension.builder()
-            .addResource(new LinksResource(linkDAO, base62Service))
+            .addResource(new LinksResource(linkDAO, base62Service, appConfig))
             .build();
 
-
-    @AfterEach
-    void tearDown() {
-        reset(linkDAO);
-        reset(base62Service);
+    @BeforeEach
+    void setUp() {
+        when(appConfig.getBaseUrl()).thenReturn("http://localhost:8080");
+        when(appConfig.getMaxCustomShortCodeLength()).thenReturn(50);
     }
 
     private Response createLinkRequest(String url) {
