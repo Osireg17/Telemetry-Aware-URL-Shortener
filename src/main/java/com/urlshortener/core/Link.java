@@ -13,7 +13,7 @@ public class Link {
     public Link(String longUrl, String shortCode) {
         this.longUrl = longUrl;
         this.shortCode = shortCode;
-        this.createdAt = Instant.now();
+        // createdAt will be set by database DEFAULT CURRENT_TIMESTAMP
     }
 
     public Long getId() {

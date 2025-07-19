@@ -13,10 +13,13 @@ import java.util.Optional;
 @RegisterBeanMapper(Link.class)
 public interface LinkDAO {
 
-    @SqlUpdate("INSERT INTO links (long_url, short_code, created_at) VALUES (:longUrl, :shortCode, :createdAt)")
+    @SqlUpdate("INSERT INTO links (long_url, short_code) VALUES (:longUrl, :shortCode)")
     @GetGeneratedKeys
     long save(@BindBean Link link);
 
     @SqlQuery("SELECT * FROM links WHERE short_code = :shortCode")
     Optional<Link> findByShortCode(@Bind("shortCode") String shortCode);
+
+    @SqlUpdate("UPDATE links SET short_code = :shortCode WHERE id = :id")
+    void updateShortCode(@Bind("id") long id, @Bind("shortCode") String shortCode);
 }

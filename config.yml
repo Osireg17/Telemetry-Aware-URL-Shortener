@@ -11,9 +11,6 @@ server:
   adminConnectors:
     - type: http
       port: 8081
-  # Shutdown configuration
-  shutdownGracePeriod: 30s
-
 
 database:
   driverClass: org.h2.Driver
@@ -26,6 +23,13 @@ database:
   checkConnectionWhileIdle: false
   evictionInterval: 10s
   minIdleTime: 1 minute
+
+application:
+  baseUrl: "http://localhost:8080"
+  version: "1.0.0-SNAPSHOT"
+  name: "UrlShortener"
+  rateLimitRequestsPerMinute: 20
+  maxCustomShortCodeLength: 50
 
 health:
   enabled: true
