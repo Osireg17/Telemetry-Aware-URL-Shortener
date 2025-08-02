@@ -15,7 +15,10 @@ public class DatabaseHealthCheck extends HealthCheck {
 	protected Result check() throws Exception {
 		try (Connection connection = dataSource.getConnection()) {
 			if (connection != null && !connection.isClosed()) {
-				return Result.healthy("Database is healthy and connected.");
+				try (var statement = connection.createStatement()) {
+					statement.execute("SELECT 1");
+					return Result.healthy("Database is healthy and connected.");
+				}
 			} else {
 				return Result.unhealthy("Database connection is closed.");
 			}

@@ -13,16 +13,18 @@ server:
       port: 8081
 
 database:
-  driverClass: org.h2.Driver
-  url: jdbc:h2:mem:urlshortener;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-  user: sa
-  password:
+  driverClass: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/urlshortener?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+  user: urlshortener_user
+  password: userpass123
   initialSize: 5
   minSize: 5
-  maxSize: 10
-  checkConnectionWhileIdle: false
+  maxSize: 20
+  checkConnectionWhileIdle: true
   evictionInterval: 10s
   minIdleTime: 1 minute
+  validationQuery: "SELECT 1"
+  validationQueryTimeout: 3s
 
 application:
   baseUrl: "http://localhost:8080"

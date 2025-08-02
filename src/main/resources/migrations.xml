@@ -6,21 +6,48 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
-    <changeSet id="1" author="developer">
-        <createTable tableName="links">
+    <changeSet id="2" author="developer">
+        <addColumn tableName="links">
+            <column name="click_count" type="INT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="4" author="developer">
+        <createTable tableName="clicks">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="long_url" type="TEXT">
+            <column name="link_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="short_code" type="VARCHAR(12)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+            <column name="click_timestamp" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
+            </column>
+            <column name="user_agent" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ip_address" type="VARCHAR(45)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="referer" type="TEXT">
+                <constraints nullable="true"/>
             </column>
         </createTable>
+        
+        <addForeignKeyConstraint baseTableName="clicks" baseColumnNames="link_id"
+                                constraintName="fk_clicks_link_id"
+                                referencedTableName="links" referencedColumnNames="id"
+                                onDelete="CASCADE"/>
+        
+        <createIndex tableName="clicks" indexName="idx_link_id">
+            <column name="link_id"/>
+        </createIndex>
+        
+        <createIndex tableName="clicks" indexName="idx_timestamp">
+            <column name="click_timestamp"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
