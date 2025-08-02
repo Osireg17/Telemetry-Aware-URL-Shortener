@@ -6,7 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
-    <changeSet id="1" author="developer">
+    <changeSet id="V1__create_links_table" author="developer">
         <createTable tableName="links">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -14,13 +14,65 @@
             <column name="long_url" type="TEXT">
                 <constraints nullable="false"/>
             </column>
-            <column name="short_code" type="VARCHAR(12)">
+            <column name="short_code" type="VARCHAR(10)">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        
+        <createIndex tableName="links" indexName="idx_short_code">
+            <column name="short_code"/>
+        </createIndex>
+        
+        <createIndex tableName="links" indexName="idx_created_at">
+            <column name="created_at"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="V2__add_click_count_to_links" author="developer">
+        <addColumn tableName="links">
+            <column name="click_count" type="INT" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="V3__create_clicks_table" author="developer">
+        <createTable tableName="clicks">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="link_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="click_timestamp" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_agent" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="ip_address" type="VARCHAR(45)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="referer" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        
+        <addForeignKeyConstraint baseTableName="clicks" baseColumnNames="link_id"
+                                constraintName="fk_clicks_link_id"
+                                referencedTableName="links" referencedColumnNames="id"
+                                onDelete="CASCADE"/>
+        
+        <createIndex tableName="clicks" indexName="idx_link_id">
+            <column name="link_id"/>
+        </createIndex>
+        
+        <createIndex tableName="clicks" indexName="idx_timestamp">
+            <column name="click_timestamp"/>
+        </createIndex>
     </changeSet>
 
 </databaseChangeLog>
