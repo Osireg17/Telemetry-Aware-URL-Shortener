@@ -4,6 +4,7 @@ import com.urlshortener.api.LinksResource;
 import com.urlshortener.api.MigrationStatusResource;
 import com.urlshortener.api.RedirectResource;
 import com.urlshortener.core.Base62Service;
+import com.urlshortener.db.ClickDAO;
 import com.urlshortener.db.LinkDAO;
 import com.urlshortener.health.BasicHealthCheck;
 import com.urlshortener.health.DatabaseHealthCheck;
@@ -66,11 +67,12 @@ public class UrlShortenerApplication extends Application<UrlShortenerConfigurati
         this.jdbi.installPlugin(new SqlObjectPlugin());
 
         LinkDAO linkDAO = this.jdbi.onDemand(LinkDAO.class);
+        ClickDAO clickDAO = this.jdbi.onDemand(ClickDAO.class);
         Base62Service base62Service = new Base62Service();
 
         // Pass application configuration to resources
         LinksResource linksResource = new LinksResource(linkDAO, base62Service, appConfig);
-        RedirectResource redirectResource = new RedirectResource(linkDAO);
+        RedirectResource redirectResource = new RedirectResource(linkDAO, clickDAO);
         MigrationStatusResource migrationStatusResource = new MigrationStatusResource(dataSource);
 
         environment.jersey().register(linksResource);

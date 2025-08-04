@@ -1,9 +1,12 @@
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/UrlShortenerApplication.java
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/UrlShortenerConfiguration.java
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/api/LinksResource.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/api/MigrationStatusResource.java
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/api/RedirectResource.java
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/core/Base62Service.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/core/Click.java
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/core/Link.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/db/ClickDAO.java
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/db/LinkDAO.java
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/health/BasicHealthCheck.java
 /Users/osiobomighie/Documents/Developer/url-shortener-api/src/main/java/com/urlshortener/health/DatabaseHealthCheck.java
