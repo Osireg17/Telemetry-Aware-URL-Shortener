@@ -6,32 +6,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
-    <changeSet id="V1__create_links_table" author="developer">
-        <createTable tableName="links">
-            <column name="id" type="BIGINT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="long_url" type="TEXT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="short_code" type="VARCHAR(10)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-        
-        <createIndex tableName="links" indexName="idx_short_code">
-            <column name="short_code"/>
-        </createIndex>
-        
-        <createIndex tableName="links" indexName="idx_created_at">
-            <column name="created_at"/>
-        </createIndex>
-    </changeSet>
-
-    <changeSet id="V2__add_click_count_to_links" author="developer">
+    <changeSet id="2" author="developer">
         <addColumn tableName="links">
             <column name="click_count" type="INT" defaultValue="0">
                 <constraints nullable="false"/>
@@ -39,7 +14,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="V3__create_clicks_table" author="developer">
+    <changeSet id="4" author="developer">
         <createTable tableName="clicks">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
