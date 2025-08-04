@@ -11,5 +11,5 @@ public interface ClickDAO {
 
     @SqlUpdate("INSERT INTO clicks (link_id, user_agent, ip_address, referer) VALUES (:linkId, :userAgent, :ipAddress, :referer)")
     @GetGeneratedKeys
-    void save(@BindBean Click click);
+    long save(@BindBean Click click);
 }
