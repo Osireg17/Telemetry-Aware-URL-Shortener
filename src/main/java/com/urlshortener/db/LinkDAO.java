@@ -22,4 +22,7 @@ public interface LinkDAO {
 
     @SqlUpdate("UPDATE links SET short_code = :shortCode WHERE id = :id")
     void updateShortCode(@Bind("id") long id, @Bind("shortCode") String shortCode);
+
+    @SqlUpdate("UPDATE links SET click_count = click_count + 1 WHERE id = :id")
+    void incrementClickCount(@Bind("id") long id);
 }

@@ -9,10 +9,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <artifactId>maven-shade-plugin</artifactId>
-          <version>3.6.0</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-jar-plugin</artifactId>
           <version>3.4.2</version>
         </plugin>
@@ -127,6 +123,12 @@
     </profile>
   </profiles>
   <dependencies>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.33</version>
+      <scope>compile</scope>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>

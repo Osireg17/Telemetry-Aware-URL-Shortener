@@ -1,11 +1,15 @@
 package com.urlshortener;
 
 import com.urlshortener.api.LinksResource;
+import com.urlshortener.api.MigrationStatusResource;
 import com.urlshortener.api.RedirectResource;
 import com.urlshortener.core.Base62Service;
+import com.urlshortener.db.ClickDAO;
 import com.urlshortener.db.LinkDAO;
 import com.urlshortener.health.BasicHealthCheck;
 import com.urlshortener.health.DatabaseHealthCheck;
+import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.core.Application;
 import io.dropwizard.core.setup.Bootstrap;
 import io.dropwizard.core.setup.Environment;
@@ -35,6 +39,10 @@ public class UrlShortenerApplication extends Application<UrlShortenerConfigurati
 
     @Override
     public void initialize(final Bootstrap<UrlShortenerConfiguration> bootstrap) {
+        bootstrap.setConfigurationSourceProvider(
+                new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
+                        new EnvironmentVariableSubstitutor(false)));
+        
         bootstrap.addBundle(new MigrationsBundle<UrlShortenerConfiguration>() {
             @Override
             public DataSourceFactory getDataSourceFactory(UrlShortenerConfiguration configuration) {
@@ -58,23 +66,17 @@ public class UrlShortenerApplication extends Application<UrlShortenerConfigurati
         this.jdbi = Jdbi.create(dataSource);
         this.jdbi.installPlugin(new SqlObjectPlugin());
 
-        // Create tables if they don't exist
-        this.jdbi.useHandle(handle -> {
-            handle.execute("CREATE TABLE IF NOT EXISTS links (" +
-                    "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
-                    "long_url TEXT NOT NULL, " +
-                    "short_code VARCHAR(" + appConfig.getMaxCustomShortCodeLength() + ") NOT NULL UNIQUE, " +
-                    "created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)");
-        });
-
         LinkDAO linkDAO = this.jdbi.onDemand(LinkDAO.class);
+        ClickDAO clickDAO = this.jdbi.onDemand(ClickDAO.class);
         Base62Service base62Service = new Base62Service();
 
         // Pass application configuration to resources
         LinksResource linksResource = new LinksResource(linkDAO, base62Service, appConfig);
-        RedirectResource redirectResource = new RedirectResource(linkDAO);
+        RedirectResource redirectResource = new RedirectResource(linkDAO, clickDAO);
+        MigrationStatusResource migrationStatusResource = new MigrationStatusResource(dataSource);
 
         environment.jersey().register(linksResource);
         environment.jersey().register(redirectResource);
+        environment.jersey().register(migrationStatusResource);
     }
 }

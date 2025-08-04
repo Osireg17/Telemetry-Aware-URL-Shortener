@@ -7,6 +7,7 @@ public class Link {
     private String longUrl;
     private String shortCode;
     private Instant createdAt;
+    private Integer clickCount;
 
     public Link() {}
 
@@ -46,5 +47,13 @@ public class Link {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getClickCount() {
+        return clickCount;
+    }
+
+    public void setClickCount(Integer clickCount) {
+        this.clickCount = clickCount;
     }
 }
