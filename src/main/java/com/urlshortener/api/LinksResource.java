@@ -80,7 +80,6 @@ public class LinksResource {
 
     public static class CreateLinkRequest {
         @NotNull
-        @NotBlank
         @URL
         private String longUrl;
 
