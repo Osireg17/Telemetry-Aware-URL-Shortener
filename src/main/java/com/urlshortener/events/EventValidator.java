@@ -43,37 +43,24 @@ public class EventValidator {
             throw new ValidationException("JSON message cannot be null or empty");
         }
 
-        try {
-            // Parse JSON to ClickEvent object
-            ClickEvent clickEvent = objectMapper.readValue(jsonMessage, ClickEvent.class);
+        // Parse JSON to ClickEvent object
+        ClickEvent clickEvent = objectMapper.readValue(jsonMessage, ClickEvent.class);
 
-            // Validate using Jakarta validation annotations
-            Set<ConstraintViolation<ClickEvent>> violations = validator.validate(clickEvent);
-            if (!violations.isEmpty()) {
-                StringBuilder sb = new StringBuilder("Validation failed: ");
-                for (ConstraintViolation<ClickEvent> violation : violations) {
-                    sb.append(violation.getPropertyPath()).append(" ").append(violation.getMessage()).append("; ");
-                }
-                throw new ValidationException(sb.toString());
+        // Validate using Jakarta validation annotations
+        Set<ConstraintViolation<ClickEvent>> violations = validator.validate(clickEvent);
+        if (!violations.isEmpty()) {
+            StringBuilder sb = new StringBuilder("Validation failed: ");
+            for (ConstraintViolation<ClickEvent> violation : violations) {
+                sb.append(violation.getPropertyPath()).append(" ").append(violation.getMessage()).append("; ");
             }
-
-            // Additional custom validations
-            validateLinkId(clickEvent.getLinkId());
-            validateShortCode(clickEvent.getShortCode());
-            validateTimestamp(clickEvent.getTimestamp());
-
-            return clickEvent;
-
-        } catch (Exception e) {
-            if (e instanceof ValidationException) {
-                try {
-                    throw e;
-                } catch (JsonProcessingException | ValidationException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-            throw new ValidationException("Failed to parse JSON message: " + e.getMessage(), e);
+            throw new ValidationException(sb.toString());
         }
+
+        validateLinkId(clickEvent.getLinkId());
+        validateShortCode(clickEvent.getShortCode());
+        validateTimestamp(clickEvent.getTimestamp());
+
+        return clickEvent;
     }
 
     private void validateLinkId(Long linkId) throws ValidationException {
@@ -97,20 +84,18 @@ public class EventValidator {
         }
 
         try {
-            // Validate ISO-8601 format
+            // Validate ISO-8601 format - try multiple common formats
             OffsetDateTime.parse(timestamp, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
-        } catch (Exception e) {
-            try {
-                // Try parsing as ISO_LOCAL_DATE_TIME with 'Z' suffix
-                if (timestamp.endsWith("Z")) {
+        } catch (Exception e1) {
+            if (timestamp.endsWith("Z")) {
+                try {
                     OffsetDateTime.parse(timestamp, DateTimeFormatter.ISO_INSTANT);
-                } else {
-                    // Try parsing as local date time
-                    OffsetDateTime.parse(timestamp + "Z", DateTimeFormatter.ISO_INSTANT);
+                    return;
+                } catch (Exception e2) {
+                    // Fall through to error
                 }
-            } catch (Exception e2) {
-                throw new ValidationException("Timestamp must be in ISO-8601 format, got: " + timestamp, e);
             }
+            throw new ValidationException("Timestamp must be in ISO-8601 format, got: " + timestamp, e1);
         }
     }
 }

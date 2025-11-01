@@ -12,8 +12,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 
 import java.util.UUID;
@@ -80,6 +80,7 @@ public class LinksResource {
 
     public static class CreateLinkRequest {
         @NotNull
+        @NotBlank
         @URL
         private String longUrl;
 
