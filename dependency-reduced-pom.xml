@@ -83,8 +83,7 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>11</source>
-          <target>11</target>
+          <release>${maven.compiler.release}</release>
         </configuration>
       </plugin>
       <plugin>
@@ -233,10 +232,13 @@
     </dependencies>
   </dependencyManagement>
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junit.version>5.11.0-M1</junit.version>
+    <maven.compiler.release>21</maven.compiler.release>
+    <maven.compiler.target>21</maven.compiler.target>
     <dropwizard.version>4.0.14</dropwizard.version>
     <mainClass>com.urlshortener.UrlShortenerApplication</mainClass>
+    <maven.compiler.source>21</maven.compiler.source>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <junit.version>5.11.0-M1</junit.version>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 </project>

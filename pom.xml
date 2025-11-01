@@ -19,6 +19,9 @@
         <dropwizard.version>4.0.14</dropwizard.version>
         <mainClass>com.urlshortener.UrlShortenerApplication</mainClass>
         <junit.version>5.11.0-M1</junit.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
     </properties>
 
     <dependencyManagement>
@@ -186,8 +189,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <!-- Use release to ensure correct cross-compilation for Java 21 -->
+                    <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
             <plugin>
