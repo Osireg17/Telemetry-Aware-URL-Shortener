@@ -1,3 +1,4 @@
-/Users/oobomighie/personal/Telemetry-Aware-URL-Shortener/src/test/java/com/urlshortener/api/LinksResourceTest.java
-/Users/oobomighie/personal/Telemetry-Aware-URL-Shortener/src/test/java/com/urlshortener/api/RedirectResourceTest.java
-/Users/oobomighie/personal/Telemetry-Aware-URL-Shortener/src/test/java/com/urlshortener/core/Base62ServiceTest.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/test/java/com/urlshortener/api/LinksResourceTest.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/test/java/com/urlshortener/api/RedirectResourceTest.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/test/java/com/urlshortener/core/Base62ServiceTest.java
+/Users/osiobomighie/Documents/Developer/url-shortener-api/src/test/java/com/urlshortener/events/EventValidatorTest.java

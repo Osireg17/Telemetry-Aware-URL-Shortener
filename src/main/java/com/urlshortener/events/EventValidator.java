@@ -1,17 +1,19 @@
 package com.urlshortener.events;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.JsonNode;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import jakarta.validation.Validation;
-import java.time.format.DateTimeFormatter;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+
 public class EventValidator {
+
     private final ObjectMapper objectMapper;
     private final Validator validator;
 
@@ -64,11 +66,11 @@ public class EventValidator {
 
         } catch (Exception e) {
             if (e instanceof ValidationException) {
-              try {
-                throw e;
-              } catch (JsonProcessingException | ValidationException ex) {
-                throw new RuntimeException(ex);
-              }
+                try {
+                    throw e;
+                } catch (JsonProcessingException | ValidationException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
             throw new ValidationException("Failed to parse JSON message: " + e.getMessage(), e);
         }

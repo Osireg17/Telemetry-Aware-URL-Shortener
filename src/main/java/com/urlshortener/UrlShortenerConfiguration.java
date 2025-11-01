@@ -1,12 +1,12 @@
 package com.urlshortener;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.dropwizard.core.Configuration;
 import io.dropwizard.db.DataSourceFactory;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.*;
-import jakarta.validation.constraints.*;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class UrlShortenerConfiguration extends Configuration {
 
@@ -37,6 +37,7 @@ public class UrlShortenerConfiguration extends Configuration {
     }
 
     public static class ApplicationConfiguration {
+
         @NotNull
         @NotBlank
         @JsonProperty("baseUrl")
