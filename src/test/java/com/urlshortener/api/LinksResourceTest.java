@@ -4,11 +4,13 @@ import com.urlshortener.UrlShortenerConfiguration;
 import com.urlshortener.core.Base62Service;
 import com.urlshortener.core.Link;
 import com.urlshortener.db.LinkDAO;
+import com.urlshortener.manager.LinkManager;
+import com.urlshortener.models.CreateLinkRequest;
+import com.urlshortener.models.CreateLinkResponse;
 import io.dropwizard.testing.junit5.DropwizardExtensionsSupport;
 import io.dropwizard.testing.junit5.ResourceExtension;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.Response;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,9 +25,10 @@ class LinksResourceTest {
     private final Base62Service base62Service = mock(Base62Service.class);
     private final UrlShortenerConfiguration.ApplicationConfiguration appConfig =
             mock(UrlShortenerConfiguration.ApplicationConfiguration.class);
+    private final LinkManager linkManager = new LinkManager(linkDAO, base62Service, appConfig);
 
     private final ResourceExtension resource = ResourceExtension.builder()
-            .addResource(new LinksResource(linkDAO, base62Service, appConfig))
+            .addResource(new LinksResource(linkManager))
             .build();
 
     @BeforeEach
@@ -35,7 +38,7 @@ class LinksResourceTest {
     }
 
     private Response createLinkRequest(String url) {
-        LinksResource.CreateLinkRequest request = new LinksResource.CreateLinkRequest();
+        CreateLinkRequest request = new CreateLinkRequest();
         request.setLongUrl(url);
         return resource.target("/api/v1/links").request().post(Entity.json(request));
     }
@@ -52,7 +55,7 @@ class LinksResourceTest {
         // Assert
         assertEquals(Response.Status.CREATED.getStatusCode(), response.getStatus());
 
-        LinksResource.CreateLinkResponse responseBody = response.readEntity(LinksResource.CreateLinkResponse.class);
+        CreateLinkResponse responseBody = response.readEntity(CreateLinkResponse.class);
         assertEquals("http://localhost:8080/C", responseBody.getShortUrl());
         assertEquals("C", responseBody.getShortCode());
 

@@ -1,10 +1,15 @@
 package com.urlshortener.api;
 
+import com.urlshortener.UrlShortenerConfiguration;
+import com.urlshortener.core.Base62Service;
 import com.urlshortener.core.Link;
 import com.urlshortener.db.ClickDAO;
 import com.urlshortener.db.LinkDAO;
+import com.urlshortener.manager.ClickManager;
+import com.urlshortener.manager.LinkManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -16,8 +21,19 @@ class RedirectResourceTest {
 
 	private final LinkDAO linkDAO = mock(LinkDAO.class);
 	private final ClickDAO clickDAO = mock(ClickDAO.class);
+	private final Base62Service base62Service = mock(Base62Service.class);
+	private final UrlShortenerConfiguration.ApplicationConfiguration appConfig =
+			mock(UrlShortenerConfiguration.ApplicationConfiguration.class);
+	private final LinkManager linkManager = new LinkManager(linkDAO, base62Service, appConfig);
+	private final ClickManager clickManager = new ClickManager(clickDAO, linkManager);
 	private final HttpServletRequest request = mock(HttpServletRequest.class);
-	private final RedirectResource redirectResource = new RedirectResource(linkDAO, clickDAO);
+	private final RedirectResource redirectResource = new RedirectResource(linkManager, clickManager);
+
+	@BeforeEach
+	void setUp() {
+		when(appConfig.getBaseUrl()).thenReturn("http://localhost:8080");
+		when(appConfig.getMaxCustomShortCodeLength()).thenReturn(50);
+	}
 
 	@Test
 	void redirect_happyPath() {

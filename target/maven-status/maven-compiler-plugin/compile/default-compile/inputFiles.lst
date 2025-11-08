@@ -13,3 +13,7 @@
 /Users/oobomighie/src/personal/Telemetry-Aware-URL-Shortener/src/main/java/com/urlshortener/events/ValidationException.java
 /Users/oobomighie/src/personal/Telemetry-Aware-URL-Shortener/src/main/java/com/urlshortener/health/BasicHealthCheck.java
 /Users/oobomighie/src/personal/Telemetry-Aware-URL-Shortener/src/main/java/com/urlshortener/health/DatabaseHealthCheck.java
+/Users/oobomighie/src/personal/Telemetry-Aware-URL-Shortener/src/main/java/com/urlshortener/manager/ClickManager.java
+/Users/oobomighie/src/personal/Telemetry-Aware-URL-Shortener/src/main/java/com/urlshortener/manager/LinkManager.java
+/Users/oobomighie/src/personal/Telemetry-Aware-URL-Shortener/src/main/java/com/urlshortener/models/CreateLinkRequest.java
+/Users/oobomighie/src/personal/Telemetry-Aware-URL-Shortener/src/main/java/com/urlshortener/models/CreateLinkResponse.java

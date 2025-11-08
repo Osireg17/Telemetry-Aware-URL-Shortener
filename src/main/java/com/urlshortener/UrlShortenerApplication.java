@@ -8,6 +8,8 @@ import com.urlshortener.db.ClickDAO;
 import com.urlshortener.db.LinkDAO;
 import com.urlshortener.health.BasicHealthCheck;
 import com.urlshortener.health.DatabaseHealthCheck;
+import com.urlshortener.manager.ClickManager;
+import com.urlshortener.manager.LinkManager;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.core.Application;
@@ -70,9 +72,11 @@ public class UrlShortenerApplication extends Application<UrlShortenerConfigurati
         ClickDAO clickDAO = this.jdbi.onDemand(ClickDAO.class);
         Base62Service base62Service = new Base62Service();
 
-        // Pass application configuration to resources
-        LinksResource linksResource = new LinksResource(linkDAO, base62Service, appConfig);
-        RedirectResource redirectResource = new RedirectResource(linkDAO, clickDAO);
+        LinkManager linkManager = new LinkManager(linkDAO, base62Service, appConfig);
+        ClickManager clickManager = new ClickManager(clickDAO, linkManager);
+
+        LinksResource linksResource = new LinksResource(linkManager);
+        RedirectResource redirectResource = new RedirectResource(linkManager, clickManager);
         MigrationStatusResource migrationStatusResource = new MigrationStatusResource(dataSource);
 
         environment.jersey().register(linksResource);
