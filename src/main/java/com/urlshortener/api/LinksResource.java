@@ -1,8 +1,12 @@
 package com.urlshortener.api;
 
+import static com.urlshortener.models.LinkCreationError.CUSTOM_CODE_ALREADY_EXISTS;
+import static com.urlshortener.models.LinkCreationError.CUSTOM_CODE_TOO_LONG;
+
 import com.urlshortener.manager.LinkManager;
 import com.urlshortener.models.CreateLinkRequest;
 import com.urlshortener.models.CreateLinkResponse;
+import com.urlshortener.models.LinkCreationResult;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -25,7 +29,7 @@ public class LinksResource {
 
     @POST
     public Response createShortLink(@Valid CreateLinkRequest request) {
-        LinkManager.LinkCreationResult result = linkManager.createLink(
+        LinkCreationResult result = linkManager.createLink(
                 request.getLongUrl(),
                 request.getCustomShortCode()
         );
