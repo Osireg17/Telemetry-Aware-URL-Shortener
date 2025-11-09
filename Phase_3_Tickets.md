@@ -1,70 +1,5 @@
 ## **Epic: Core Event-Driven Refactoring**
 
-### **Ticket 3.1: Set Up Local Kafka Infrastructure**
-
-**Priority:** High
-
-**Estimated Effort:** 2-3 hours
-
-**Prerequisites:** Docker knowledge from previous phases
-
-**Description:**
-Set up Kafka and Zookeeper locally using Docker Compose to prepare for event-driven architecture.
-
-**Tasks:**
-
-- [ ]  Update `docker-compose.yml` to include Kafka and Zookeeper services
-- [ ]  Add environment variables for Kafka configuration
-- [ ]  Verify Kafka is accessible from the main application
-- [ ]  Create a simple script to test Kafka connectivity
-
-**Acceptance Criteria:**
-
-- [ ]  `docker-compose up` starts Kafka, Zookeeper, MySQL, and main app
-- [ ]  Kafka UI/CLI shows the cluster is healthy
-- [ ]  Can create and list topics using Kafka CLI tools
-- [ ]  All services can communicate with each other
-
-**Definition of Done:**
-
-- [ ]  Documentation updated with new setup instructions
-- [ ]  README includes troubleshooting for common Kafka issues
-
----
-
-### **Ticket 3.2: Create Kafka Topic and Message Schema**
-
-**Priority:** High
-
-**Estimated Effort:** 1-2 hours
-
-**Prerequisites:** Ticket 3.1 completed
-
-**Description:**
-Define the event schema and create the Kafka topic for link click events.
-
-**Tasks:**
-
-- [ ]  Create `link_clicks` topic with appropriate partitions and replication
-- [ ]  Define JSON schema for click events: `{"linkId": 1001, "shortCode": "g5", "timestamp": "...", "userAgent": "...", "ipAddress": "..."}`
-- [ ]  Create a schema validation utility class
-- [ ]  Write unit tests for schema validation
-
-**Acceptance Criteria:**
-
-- [ ]  Topic `link_clicks` exists and is configured properly
-- [ ]  Event schema is documented with examples
-- [ ]  Schema validation prevents malformed messages
-- [ ]  Unit tests cover all required and optional fields
-
-**Testing Notes:**
-
-- Test with valid and invalid JSON structures
-- Verify timestamp formats are consistent
-- Test with missing required fields
-
----
-
 ### **Ticket 3.3: Add Kafka Producer to Main Service**
 
 **Priority:** High
@@ -88,17 +23,14 @@ Integrate Kafka producer into the main service to publish click events instead o
 **Acceptance Criteria:**
 
 - [ ]  `GET /{shortCode}` endpoint publishes event to Kafka topic
-- [ ]  Redirect response time is significantly faster (no DB write)
 - [ ]  Events contain all required fields (linkId, shortCode, timestamp, userAgent, ipAddress)
-- [ ]  Graceful handling when Kafka is unavailable (with appropriate fallback)
 - [ ]  Producer is properly configured for reliability
 
 **Testing Strategy:**
 
 - [ ]  Unit tests for `EventPublisher` class
 - [ ]  Integration tests with embedded Kafka
-- [ ]  Performance tests showing improved response times
-- [ ]  Error handling tests (Kafka down scenarios)
+- [ ]  If kafka down propagate the error upstream so that it's easier to debug
 
 ---
 

@@ -20,6 +20,11 @@ public class UrlShortenerConfiguration extends Configuration {
     @JsonProperty("application")
     private ApplicationConfiguration application = new ApplicationConfiguration();
 
+    @Valid
+    @NotNull
+    @JsonProperty("kafka")
+    private KafkaConfiguration kafka = new KafkaConfiguration();
+
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }
@@ -34,6 +39,14 @@ public class UrlShortenerConfiguration extends Configuration {
 
     public void setApplication(ApplicationConfiguration application) {
         this.application = application;
+    }
+
+    public KafkaConfiguration getKafka() {
+        return kafka;
+    }
+
+    public void setKafka(KafkaConfiguration kafka) {
+        this.kafka = kafka;
     }
 
     public static class ApplicationConfiguration {
@@ -97,6 +110,101 @@ public class UrlShortenerConfiguration extends Configuration {
 
         public void setMaxCustomShortCodeLength(int maxCustomShortCodeLength) {
             this.maxCustomShortCodeLength = maxCustomShortCodeLength;
+        }
+    }
+
+    public static class KafkaConfiguration {
+
+        @NotBlank
+        @JsonProperty("bootstrapServers")
+        private String bootstrapServers = "localhost:9092";
+
+        @NotBlank
+        @JsonProperty("topicName")
+        private String topicName = "link_clicks";
+
+        @NotBlank
+        @JsonProperty("acks")
+        private String acks = "1";
+
+        @JsonProperty("retries")
+        private int retries = 3;
+
+        @JsonProperty("requestTimeoutMs")
+        private int requestTimeoutMs = 30000;
+
+        @JsonProperty("maxBlockMs")
+        private int maxBlockMs = 60000;
+
+        @JsonProperty("enableIdempotence")
+        private boolean enableIdempotence = true;
+
+        @JsonProperty("compressionType")
+        private String compressionType = "lz4";
+
+        // Getters and setters
+        public String getBootstrapServers() {
+            return bootstrapServers;
+        }
+
+        public void setBootstrapServers(String bootstrapServers) {
+            this.bootstrapServers = bootstrapServers;
+        }
+
+        public String getTopicName() {
+            return topicName;
+        }
+
+        public void setTopicName(String topicName) {
+            this.topicName = topicName;
+        }
+
+        public String getAcks() {
+            return acks;
+        }
+
+        public void setAcks(String acks) {
+            this.acks = acks;
+        }
+
+        public int getRetries() {
+            return retries;
+        }
+
+        public void setRetries(int retries) {
+            this.retries = retries;
+        }
+
+        public int getRequestTimeoutMs() {
+            return requestTimeoutMs;
+        }
+
+        public void setRequestTimeoutMs(int requestTimeoutMs) {
+            this.requestTimeoutMs = requestTimeoutMs;
+        }
+
+        public int getMaxBlockMs() {
+            return maxBlockMs;
+        }
+
+        public void setMaxBlockMs(int maxBlockMs) {
+            this.maxBlockMs = maxBlockMs;
+        }
+
+        public boolean isEnableIdempotence() {
+            return enableIdempotence;
+        }
+
+        public void setEnableIdempotence(boolean enableIdempotence) {
+            this.enableIdempotence = enableIdempotence;
+        }
+
+        public String getCompressionType() {
+            return compressionType;
+        }
+
+        public void setCompressionType(String compressionType) {
+            this.compressionType = compressionType;
         }
     }
 }

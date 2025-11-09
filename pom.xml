@@ -104,6 +104,12 @@
         <version>5.12.0</version>
         <scope>test</scope>
       </dependency>
+      <!-- Kafka Client -->
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-clients</artifactId>
+        <version>3.7.0</version>
+      </dependency>
     </dependencies>
 
     <build>

@@ -42,7 +42,16 @@ public class RedirectResource {
 
         Link link = optionalLink.get();
 
-        CompletableFuture.runAsync(() -> clickManager.recordClick(link.getId(), request));
+        // Asynchronously publish click event to Kafka
+        // Kafka producer will retry up to 3 times as configured
+        CompletableFuture.runAsync(() -> {
+            try {
+                clickManager.recordClick(link, request);
+            } catch (Exception e) {
+                logger.error("Failed to record click event for short code {}: {}", shortCode, e.getMessage());
+            }
+        });
+
         logger.info("Redirecting short code {} to URL {}", shortCode, link.getLongUrl());
 
         return Response.status(Response.Status.FOUND)
