@@ -1,10 +1,9 @@
 package com.urlshortener.api;
 
 import com.codahale.metrics.annotation.Timed;
-import com.urlshortener.core.Click;
 import com.urlshortener.core.Link;
-import com.urlshortener.db.ClickDAO;
-import com.urlshortener.db.LinkDAO;
+import com.urlshortener.manager.ClickManager;
+import com.urlshortener.manager.LinkManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -23,19 +22,19 @@ public class RedirectResource {
 
     private static final Logger logger = LoggerFactory.getLogger(RedirectResource.class);
 
-    private final LinkDAO linkDAO;
-    private final ClickDAO clickDAO;
+    private final LinkManager linkManager;
+    private final ClickManager clickManager;
 
-    public RedirectResource(LinkDAO linkDAO, ClickDAO clickDAO) {
-        this.linkDAO = linkDAO;
-        this.clickDAO = clickDAO;
+    public RedirectResource(LinkManager linkManager, ClickManager clickManager) {
+        this.linkManager = linkManager;
+        this.clickManager = clickManager;
     }
 
     @GET
     @Path("/{shortCode}")
     @Timed
     public Response redirect(@PathParam("shortCode") String shortCode, @Context HttpServletRequest request) {
-        Optional<Link> optionalLink = linkDAO.findByShortCode(shortCode);
+        Optional<Link> optionalLink = linkManager.findByShortCode(shortCode);
 
         if (optionalLink.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -43,46 +42,20 @@ public class RedirectResource {
 
         Link link = optionalLink.get();
 
-        // Capture telemetry asynchronously to ensure fast redirect
-        CompletableFuture.runAsync(() -> captureTelemetry(link, request));
+        // Asynchronously publish click event to Kafka
+        // Kafka producer will retry up to 3 times as configured
+        CompletableFuture.runAsync(() -> {
+            try {
+                clickManager.recordClick(link, request);
+            } catch (Exception e) {
+                logger.error("Failed to record click event for short code {}: {}", shortCode, e.getMessage());
+            }
+        });
+
         logger.info("Redirecting short code {} to URL {}", shortCode, link.getLongUrl());
 
         return Response.status(Response.Status.FOUND)
                 .location(URI.create(link.getLongUrl()))
                 .build();
-    }
-
-    private void captureTelemetry(Link link, HttpServletRequest request) {
-        // Extract telemetry data from request
-        String userAgent = request.getHeader("User-Agent");
-        String referer = request.getHeader("Referer");
-        String ipAddress = getClientIpAddress(request);
-
-        // Create and save click record
-        Click click = new Click(link.getId(), userAgent, ipAddress, referer);
-        clickDAO.save(click);
-
-        // Increment click count
-        linkDAO.incrementClickCount(link.getId());
-        logger.info("Captured click for link ID {}: IP={}, User-Agent={}, Referer={}",
-                link.getId(), ipAddress, userAgent, referer);
-    }
-
-    private String getClientIpAddress(HttpServletRequest request) {
-        // Check for X-Forwarded-For header (common in load balancers/proxies)
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
-            // X-Forwarded-For can contain multiple IPs, get the first one
-            return xForwardedFor.split(",")[0].trim();
-        }
-
-        // Check for X-Real-IP header (another common proxy header)
-        String xRealIp = request.getHeader("X-Real-IP");
-        if (xRealIp != null && !xRealIp.isEmpty()) {
-            return xRealIp;
-        }
-
-        // Fall back to remote address
-        return request.getRemoteAddr();
     }
 }

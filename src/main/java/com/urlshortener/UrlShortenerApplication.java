@@ -4,10 +4,12 @@ import com.urlshortener.api.LinksResource;
 import com.urlshortener.api.MigrationStatusResource;
 import com.urlshortener.api.RedirectResource;
 import com.urlshortener.core.Base62Service;
-import com.urlshortener.db.ClickDAO;
 import com.urlshortener.db.LinkDAO;
 import com.urlshortener.health.BasicHealthCheck;
 import com.urlshortener.health.DatabaseHealthCheck;
+import com.urlshortener.kafka.EventPublisher;
+import com.urlshortener.manager.ClickManager;
+import com.urlshortener.manager.LinkManager;
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.core.Application;
@@ -67,12 +69,18 @@ public class UrlShortenerApplication extends Application<UrlShortenerConfigurati
         this.jdbi.installPlugin(new SqlObjectPlugin());
 
         LinkDAO linkDAO = this.jdbi.onDemand(LinkDAO.class);
-        ClickDAO clickDAO = this.jdbi.onDemand(ClickDAO.class);
         Base62Service base62Service = new Base62Service();
 
-        // Pass application configuration to resources
-        LinksResource linksResource = new LinksResource(linkDAO, base62Service, appConfig);
-        RedirectResource redirectResource = new RedirectResource(linkDAO, clickDAO);
+        // Initialize Kafka EventPublisher
+        UrlShortenerConfiguration.KafkaConfiguration kafkaConfig = configuration.getKafka();
+        EventPublisher eventPublisher = new EventPublisher(kafkaConfig);
+        environment.lifecycle().manage(eventPublisher);
+
+        LinkManager linkManager = new LinkManager(linkDAO, base62Service, appConfig);
+        ClickManager clickManager = new ClickManager(eventPublisher);
+
+        LinksResource linksResource = new LinksResource(linkManager);
+        RedirectResource redirectResource = new RedirectResource(linkManager, clickManager);
         MigrationStatusResource migrationStatusResource = new MigrationStatusResource(dataSource);
 
         environment.jersey().register(linksResource);
