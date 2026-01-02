@@ -8,27 +8,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
 
 public class EventValidator {
 
     private final ObjectMapper objectMapper;
     private final Validator validator;
 
-    // === PSEUDOCODE: Remove no-arg constructor ===
-    // DELETE the no-arg constructor that creates its own ObjectMapper
-    // REASON: Forces callers to provide dependencies, preventing accidental expensive instantiation
-    // ==============================================
-
-    // === PSEUDOCODE: Update constructor to accept both dependencies ===
-    // MODIFY constructor to accept BOTH ObjectMapper AND Validator as parameters
-    // ASSIGN objectMapper parameter to this.objectMapper field
-    // ASSIGN validator parameter to this.validator field
-    // REMOVE ValidatorFactory creation (caller provides Validator)
-    // REASON: Dependency injection - reuse shared instances instead of creating new ones
-    // ==================================================================
     public EventValidator(ObjectMapper objectMapper, Validator validator) {
         this.objectMapper = objectMapper;
         this.validator = validator;
