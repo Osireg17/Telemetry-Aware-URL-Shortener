@@ -5,14 +5,23 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 public class EventValidatorTest {
 
     private EventValidator validator;
+    private ObjectMapper objectMapper;
+    private Validator validatorInstance;
 
     @BeforeEach
     void setUp() {
-        validator = new EventValidator();
+        objectMapper = new ObjectMapper();
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validatorInstance = factory.getValidator();
+        validator = new EventValidator(objectMapper, validatorInstance);
     }
 
     @Test

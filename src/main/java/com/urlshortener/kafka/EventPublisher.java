@@ -51,6 +51,12 @@ public class EventPublisher implements Managed {
         props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, config.getRequestTimeoutMs());
         props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, config.getMaxBlockMs());
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, config.isEnableIdempotence());
+        // === PSEUDOCODE: Add max in-flight requests configuration ===
+        // ADD ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION property
+        // SET value from config.getMaxInFlightRequestsPerConnection()
+        // REASON: Limits concurrent unacknowledged requests to prevent message reordering
+        // ============================================================
+        props.put(ProducerConfig.MAX_IN_FLIGHT_REQUESTS_PER_CONNECTION, config.getMaxInFlightRequestsPerConnection());
         props.put(ProducerConfig.COMPRESSION_TYPE_CONFIG, config.getCompressionType());
 
         return new KafkaProducer<>(props);

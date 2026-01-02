@@ -17,16 +17,21 @@ public class EventValidator {
     private final ObjectMapper objectMapper;
     private final Validator validator;
 
-    public EventValidator() {
-        this.objectMapper = new ObjectMapper();
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        this.validator = factory.getValidator();
-    }
+    // === PSEUDOCODE: Remove no-arg constructor ===
+    // DELETE the no-arg constructor that creates its own ObjectMapper
+    // REASON: Forces callers to provide dependencies, preventing accidental expensive instantiation
+    // ==============================================
 
-    public EventValidator(ObjectMapper objectMapper) {
+    // === PSEUDOCODE: Update constructor to accept both dependencies ===
+    // MODIFY constructor to accept BOTH ObjectMapper AND Validator as parameters
+    // ASSIGN objectMapper parameter to this.objectMapper field
+    // ASSIGN validator parameter to this.validator field
+    // REMOVE ValidatorFactory creation (caller provides Validator)
+    // REASON: Dependency injection - reuse shared instances instead of creating new ones
+    // ==================================================================
+    public EventValidator(ObjectMapper objectMapper, Validator validator) {
         this.objectMapper = objectMapper;
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        this.validator = factory.getValidator();
+        this.validator = validator;
     }
 
     public boolean isValidClickEvent(String jsonMessage) {

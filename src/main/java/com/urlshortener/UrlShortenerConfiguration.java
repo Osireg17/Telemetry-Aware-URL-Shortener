@@ -123,12 +123,22 @@ public class UrlShortenerConfiguration extends Configuration {
         @JsonProperty("topicName")
         private String topicName = "link_clicks";
 
+        // === PSEUDOCODE: Change acknowledgment strategy ===
+        // UPDATE default value from "1" to "all"
+        // REASON: With idempotence enabled, "all" ensures replicas persist before ack
+        // PREVENTS: Data loss during broker failover
+        // ===================================================
         @NotBlank
         @JsonProperty("acks")
-        private String acks = "1";
+        private String acks = "all";
 
+        // === PSEUDOCODE: Increase retry attempts ===
+        // UPDATE retries from 3 to Integer.MAX_VALUE
+        // REASON: With idempotence + acks="all", retries are safe and won't cause duplicates
+        // ENSURES: Transient failures don't lose messages
+        // ============================================
         @JsonProperty("retries")
-        private int retries = 3;
+        private int retries = Integer.MAX_VALUE;
 
         @JsonProperty("requestTimeoutMs")
         private int requestTimeoutMs = 30000;
@@ -138,6 +148,15 @@ public class UrlShortenerConfiguration extends Configuration {
 
         @JsonProperty("enableIdempotence")
         private boolean enableIdempotence = true;
+
+        // === PSEUDOCODE: Add max in-flight requests limit ===
+        // ADD new configuration field
+        // SET default value to 5 (Kafka's recommended max for idempotence)
+        // REASON: Prevents message reordering when retries occur
+        // ENSURES: Messages are delivered in order even with retries
+        // =====================================================
+        @JsonProperty("maxInFlightRequestsPerConnection")
+        private int maxInFlightRequestsPerConnection = 5;
 
         @JsonProperty("compressionType")
         private String compressionType = "lz4";
@@ -197,6 +216,18 @@ public class UrlShortenerConfiguration extends Configuration {
 
         public void setEnableIdempotence(boolean enableIdempotence) {
             this.enableIdempotence = enableIdempotence;
+        }
+
+        // === PSEUDOCODE: Add getter and setter for maxInFlightRequestsPerConnection ===
+        // ADD getter method that RETURNS the maxInFlightRequestsPerConnection value
+        // ADD setter method that ACCEPTS an int parameter and SETS the field
+        // ==============================================================================
+        public int getMaxInFlightRequestsPerConnection() {
+            return maxInFlightRequestsPerConnection;
+        }
+
+        public void setMaxInFlightRequestsPerConnection(int maxInFlightRequestsPerConnection) {
+            this.maxInFlightRequestsPerConnection = maxInFlightRequestsPerConnection;
         }
 
         public String getCompressionType() {
