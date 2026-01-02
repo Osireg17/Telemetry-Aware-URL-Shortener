@@ -44,7 +44,19 @@ services:
           --topic link_clicks \
           --bootstrap-server kafka:29092 \
           --partitions 3 \
-          --replication-factor 1 \
+command:
+  - |
+    /opt/kafka/bin/kafka-topics.sh --create \
+      --if-not-exists \
+      --topic link_clicks \
+      --bootstrap-server kafka:29092 \
+      --partitions 3 \
+      --replication-factor 1 \
+      --config retention.ms=604800000 \
+      --config compression.type=lz4
+
+    echo "Listing all topics:"
+    /opt/kafka/bin/kafka-topics.sh --list --bootstrap-server kafka:29092
           --config retention.ms=604800000 \
           --config compression.type=lz4
         done
