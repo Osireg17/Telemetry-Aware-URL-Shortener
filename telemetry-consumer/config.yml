@@ -1,0 +1,54 @@
+---
+logging:
+  level: INFO
+  loggers:
+    com.urlshortener.telemetry: DEBUG
+
+server:
+  applicationConnectors:
+    - type: http
+      port: 8082
+  adminConnectors:
+    - type: http
+      port: 8083
+
+database:
+  driverClass: com.mysql.cj.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/urlshortener?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+  user: urlshortener_user
+  password: userpass123
+  initialSize: 5
+  minSize: 5
+  maxSize: 20
+  checkConnectionWhileIdle: true
+  evictionInterval: 10s
+  minIdleTime: 1 minute
+  validationQuery: "SELECT 1"
+  validationQueryTimeout: 3s
+
+application:
+  name: "TelemetryConsumer"
+  version: "1.0.0-SNAPSHOT"
+
+kafka:
+  bootstrapServers: "localhost:9092"
+  topicName: "link_clicks"
+  groupId: "telemetry-consumer-group"
+  autoOffsetReset: "earliest"
+  enableAutoCommit: false
+  maxPollRecords: 500
+  sessionTimeoutMs: 30000
+  maxPollIntervalMs: 300000
+
+health:
+  enabled: true
+  delayedShutdownHandlerEnabled: true
+  shutdownWaitPeriod: 5s
+  healthCheckUrlPaths:
+    - /health
+    - /healthcheck
+  initialOverallState: false
+  responseProvider:
+    type: json
+  responder:
+    type: servlet
