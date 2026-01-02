@@ -33,6 +33,16 @@ application:
   rateLimitRequestsPerMinute: 20
   maxCustomShortCodeLength: 50
 
+kafka:
+  bootstrapServers: "localhost:9092"
+  topicName: "link_clicks"
+  acks: "1"
+  retries: 3
+  requestTimeoutMs: 30000
+  maxBlockMs: 60000
+  enableIdempotence: true
+  compressionType: "lz4"
+
 health:
   enabled: true
   delayedShutdownHandlerEnabled: true
