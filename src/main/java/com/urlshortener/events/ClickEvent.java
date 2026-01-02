@@ -101,23 +101,29 @@ public class ClickEvent {
                 '}';
     }
 
+    // === PSEUDOCODE: Make equals() null-safe ===
+    // KEEP the identity check (this == o)
+    // KEEP the null/class check
+    // REPLACE direct .equals() calls with Objects.equals(field, that.field)
+    // USE pattern matching for instanceof (modern Java)
+    // REASON: Objects.equals() handles null safely - prevents NPE if fields are null
+    // ===========================================
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ClickEvent that = (ClickEvent) o;
-
-        if (!linkId.equals(that.linkId)) return false;
-        if (!shortCode.equals(that.shortCode)) return false;
-        return timestamp.equals(that.timestamp);
+        if (!(o instanceof ClickEvent that)) return false;
+        return java.util.Objects.equals(linkId, that.linkId)
+                && java.util.Objects.equals(shortCode, that.shortCode)
+                && java.util.Objects.equals(timestamp, that.timestamp);
     }
 
+    // === PSEUDOCODE: Make hashCode() null-safe ===
+    // REPLACE manual hash calculation with Objects.hash(fields...)
+    // PASS all fields used in equals() to Objects.hash()
+    // REASON: Objects.hash() handles nulls gracefully (treats null as 0)
+    // =============================================
     @Override
     public int hashCode() {
-        int result = linkId.hashCode();
-        result = 31 * result + shortCode.hashCode();
-        result = 31 * result + timestamp.hashCode();
-        return result;
+        return java.util.Objects.hash(linkId, shortCode, timestamp);
     }
 }
